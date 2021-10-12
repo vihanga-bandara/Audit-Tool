@@ -54,7 +54,7 @@ export class AdminComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.showSpinner();
+        await this.showSpinner();
         await Promise.all([
             this.getCurrentUser(),
             this.getAllProducts(),
@@ -63,7 +63,7 @@ export class AdminComponent implements OnInit {
         ]);
 
         if (this.users && this.products && this.organizations && this.currentUserId && this.currentUserName) {
-            this.hideSpinner();
+            await this.hideSpinner();
         }
     }
 
@@ -90,20 +90,21 @@ export class AdminComponent implements OnInit {
     async addUserToProject() {
         const {product, userIds} = this.productUserForm.value;
 
-        if (product && userIds) {
-            const result = await this.adminService.addProductUser(product, userIds);
+        if (!product) {
+            this.alert.showError('Please select a product', 'Error');
+            return;
+        }
+        if (!userIds) {
+            this.alert.showError('Please select at least one user', 'Error');
+            return;
+        }
+        const result = await this.adminService.addProductUser(product, userIds);
 
-            if (result) {
-                this.reset();
-                this.alert.showSuccess('User added successfuly', 'Done');
-            } else {
-                this.alert.showError('Cannot add the user', 'Error');
-            }
+        if (result) {
+            await this.reset();
+            this.alert.showSuccess('User added successfully', 'Done');
         } else {
-            this.alert.showError(
-                'Please select at least one user and a Product',
-                'Warning',
-            );
+            this.alert.showError('Cannot add the user', 'Error');
         }
     }
 
@@ -111,22 +112,12 @@ export class AdminComponent implements OnInit {
         const {name, description, organization, userIds} = this.productForm.value;
 
         if (!name) {
-            this.alert.showError(
-                'Product name is required',
-                'Error',
-            );
+            this.alert.showError('Product name is required', 'Error');
             return;
-        }
-
-        if (!organization) {
-            this.alert.showError(
-                'Organization is required',
-                'Error',
-            );
+        } else if (!organization) {
+            this.alert.showError('Organization is required', 'Error');
             return;
-        }
-
-        if (!userIds) {
+        } else if (!userIds) {
             this.alert.showError('At least one user is required', 'Error');
             return;
         }
@@ -142,7 +133,7 @@ export class AdminComponent implements OnInit {
         const result = await this.adminService.addProduct(product);
         if (result) {
             await this.reset();
-            this.alert.showSuccess('Product added successfuly', 'Done');
+            this.alert.showSuccess('Product added successfully', 'Done');
             this.addProductButtonDisabled = false;
         } else {
             this.alert.showError('Cannot add the product', 'Error');
@@ -152,23 +143,25 @@ export class AdminComponent implements OnInit {
 
     async addOrganization() {
         const {name, email, phone} = this.organizationForm.value;
-
-        if (name) {
-            const organization = new Organization();
-            organization.name = name;
-            organization.email = email;
-            organization.phoneNumber = phone;
-
-            const result = await this.adminService.addOrganization(organization);
-
-            if (result) {
-                this.reset();
-                this.alert.showSuccess('Organization added successfuly', 'Done');
-            } else {
-                this.alert.showError('Cannot add the organization', 'Error');
-            }
-        } else {
+        if (!name) {
             this.alert.showError('Organization name is required', 'Error');
+            return;
+        }
+
+        this.addOrganisationButtonDisabled = true;
+
+        const organization = new Organization();
+        organization.name = name;
+        organization.email = email;
+        organization.phoneNumber = phone;
+        const result = await this.adminService.addOrganization(organization);
+        if (result) {
+            await this.reset();
+            this.alert.showSuccess('Organization added successfully', 'Done');
+            this.addOrganisationButtonDisabled = false;
+        } else {
+            this.alert.showError('Cannot add the organization', 'Error');
+            this.addOrganisationButtonDisabled = false;
         }
     }
 
@@ -203,7 +196,7 @@ export class AdminComponent implements OnInit {
         ]);
 
         if (this.products && this.users && this.organizations) {
-            this.hideSpinner();
+            await this.hideSpinner();
         }
     }
 
