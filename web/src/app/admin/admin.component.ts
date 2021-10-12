@@ -23,7 +23,7 @@ export class AdminComponent implements OnInit {
     faSpinner = faSpinner;
     loader = false;
     addProductButtonDisabled = false;
-    addProductToUserButtonDisabled = false;
+    addUserToProductButtonDisabled = false;
     addOrganisationButtonDisabled = false;
 
     productUserForm = this.fb.group({
@@ -87,24 +87,28 @@ export class AdminComponent implements OnInit {
         }
     }
 
-    async addUserToProject() {
+    async addUserToProduct() {
         const {product, userIds} = this.productUserForm.value;
 
         if (!product) {
             this.alert.showError('Please select a product', 'Error');
             return;
-        }
-        if (!userIds) {
+        } else if (!userIds) {
             this.alert.showError('Please select at least one user', 'Error');
             return;
         }
+
+        this.addUserToProductButtonDisabled = true;
+
         const result = await this.adminService.addProductUser(product, userIds);
 
         if (result) {
-            await this.reset();
             this.alert.showSuccess('User added successfully', 'Done');
+            await this.reset();
+            this.addUserToProductButtonDisabled = false;
         } else {
             this.alert.showError('Cannot add the user', 'Error');
+            this.addUserToProductButtonDisabled = false;
         }
     }
 
@@ -132,8 +136,8 @@ export class AdminComponent implements OnInit {
         product.userId = this.currentUserId;
         const result = await this.adminService.addProduct(product);
         if (result) {
-            await this.reset();
             this.alert.showSuccess('Product added successfully', 'Done');
+            await this.reset();
             this.addProductButtonDisabled = false;
         } else {
             this.alert.showError('Cannot add the product', 'Error');
@@ -156,8 +160,8 @@ export class AdminComponent implements OnInit {
         organization.phoneNumber = phone;
         const result = await this.adminService.addOrganization(organization);
         if (result) {
-            await this.reset();
             this.alert.showSuccess('Organization added successfully', 'Done');
+            await this.reset();
             this.addOrganisationButtonDisabled = false;
         } else {
             this.alert.showError('Cannot add the organization', 'Error');

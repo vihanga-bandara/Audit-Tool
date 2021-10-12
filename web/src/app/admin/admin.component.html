@@ -24,7 +24,7 @@
             <div class="card-deck">
               <div class="card admin-tile p-3">
                 <div class="card-body pt-0">
-                  <form [formGroup]="productUserForm" (ngSubmit)="addUserToProject()">
+                  <form [formGroup]="productUserForm" (ngSubmit)="addUserToProduct()">
                     <div class="form-group" style="min-width:320px;">
                       Select Product
                       <ng-select class="custom-select" [items]="products" bindLabel="name" bindValue="id"
@@ -37,11 +37,11 @@
                         bindLabel="email" bindValue="id" formControlName="userIds">
                       </ng-select>
                     </div>
-                    <button type="submit" class="btn btn-primary d-flex">
+                    <button type="submit" class="btn btn-primary d-flex" [disabled]="addUserToProductButtonDisabled">
                       Save
                     </button>
                     <fa-icon
-                      *ngIf="true"
+                      *ngIf="addUserToProductButtonDisabled"
                       [icon]="faSpinner"
                       class="text-secondary fa-spin mr-2 spinner"
                     ></fa-icon>
@@ -84,7 +84,7 @@
                       Save
                     </button>
                     <fa-icon
-                      *ngIf="true"
+                      *ngIf="addProductButtonDisabled"
                       [icon]="faSpinner"
                       class="text-secondary fa-spin mr-2 spinner"
                     ></fa-icon>
@@ -114,11 +114,11 @@
                       Organization Phone
                       <input class="form-control" formControlName="phone" type="text" style="width: 100%;">
                     </div>
-                    <button type="submit" class="btn btn-primary d-flex">
+                    <button type="submit" class="btn btn-primary d-flex" [disabled]="addOrganisationButtonDisabled">
                       Save
                     </button>
                     <fa-icon
-                      *ngIf="true"
+                      *ngIf="addOrganisationButtonDisabled"
                       [icon]="faSpinner"
                       class="text-secondary fa-spin mr-2 spinner"
                     ></fa-icon>
