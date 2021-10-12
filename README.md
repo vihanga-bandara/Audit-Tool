@@ -30,32 +30,34 @@
     npm run setup
     ```
  
-- To run locally,
+  - To run locally,
 
-    set the proxy configurations by replacing web/proxy.config.json with following code.
+      - add .env.dev file with necessary credentials
 
-    ```
-    [
-        {
-            "context": ["/dev"],
-            "target": "http://localhost:3000",
-            "secure": false,
-            "changeOrigin": false,
-            "logLevel": "debug",
-            "pathRewrite": { "^/dev": "" }
-        }
-    ]  
-    ```
+      - set the proxy configurations by replacing web/proxy.config.json with following code.
 
-    run following command in project root directory.
+      ```
+      [
+          {
+              "context": ["/dev"],
+              "target": "http://localhost:3000",
+              "secure": false,
+              "changeOrigin": false,
+              "logLevel": "debug",
+              "pathRewrite": { "^/dev": "" }
+          }
+      ]  
+      ```
 
-    ```
-    npm run dev
-    ```
+      - run following command in project root directory.
+
+      ```
+      npm run dev
+      ```
  
 - To deploy
 
-    remember to change the web/proxy.config.json back to
+    - remember to change the web/proxy.config.json back to
 
     ```
     [
@@ -69,7 +71,7 @@
     ]
     ```
 
-    run following command in project root directory
+    - run following command in project root directory
 
     ```
     npm run deploy
